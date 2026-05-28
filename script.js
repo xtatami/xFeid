@@ -72,7 +72,7 @@ document.addEventListener("DOMContentLoaded", () => {
     setTimeout(() => {
       errorSection.style.display = "none";
       mainContent.style.display = "block";
-      // 🎵 iniciar música automáticamente en el primer track
+      // 🎵 reproducir automáticamente el primer track (assets/0.mp3)
       loadTrack(0);
     }, 1000); // coincide con la duración de tu transición CSS
   });
