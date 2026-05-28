@@ -36,9 +36,10 @@ document.addEventListener("DOMContentLoaded", () => {
     currentTrack = index;
     audio.src = tracks[currentTrack].src;
     trackInfo.textContent = "/// " + tracks[currentTrack].name;
-    audio.play();
-    playBtn.innerHTML = "❚❚ PAUSE";
-    playBtn.style.color = "#fff";
+    audio.play().then(() => {
+      playBtn.innerHTML = "❚❚ PAUSE";
+      playBtn.style.color = "#fff";
+    }).catch(err => console.log("No se pudo reproducir la música:", err));
   }
 
   function toggleMusic(btn) {
@@ -64,21 +65,20 @@ document.addEventListener("DOMContentLoaded", () => {
   audio.volume = 0.4;
   audio.addEventListener("ended", nextTrack);
 
- // ➡ Acción del botón "continue" con transición y música
-continueBtn.addEventListener("click", (e) => {
-  e.preventDefault();
-  errorSection.classList.add("fade-out"); // activa animación CSS
+  // ➡ Acción del botón "continue" con música automática
+  continueBtn.addEventListener("click", (e) => {
+    e.preventDefault();
+    errorSection.classList.add("fade-out"); // activa animación CSS
+    setTimeout(() => {
+      errorSection.style.display = "none";
+      mainContent.style.display = "block";
+      // 🎵 iniciar música automáticamente en el primer track
+      loadTrack(0);
+    }, 1000); // coincide con la duración de tu transición CSS
+  });
 
-  setTimeout(() => {
-    errorSection.style.display = "none";
-    mainContent.style.display = "block";
-
-    // 🎵 iniciar música como si hubieras pulsado play
-    audio.src = tracks[0].src;            // carga primer track
-    trackInfo.textContent = "/// " + tracks[0].name;
-    audio.play().then(() => {
-      playBtn.innerHTML = "❚❚ PAUSE";
-      playBtn.style.color = "#fff";
-    }).catch(err => console.log("No se pudo reproducir la música:", err));
-  }, 1000); // coincide con la duración de tu transición CSS
+  // Exponer funciones a botones
+  window.toggleMusic = toggleMusic;
+  window.nextTrack = nextTrack;
+  window.prevTrack = prevTrack;
 });
