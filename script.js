@@ -19,13 +19,6 @@ document.addEventListener("DOMContentLoaded", () => {
     errorSection.style.display = "flex";
   });
 
-  // ➡ Acción del botón "continue"
-  continueBtn.addEventListener("click", (e) => {
-    e.preventDefault();
-    errorSection.style.display = "none";
-    mainContent.style.display = "block";
-  });
-
   // --- 🎵 Reproductor de música ---
   const tracks = [
     { src: "assets/0.mp3", name: "Bajo De La Piel" },
@@ -43,9 +36,10 @@ document.addEventListener("DOMContentLoaded", () => {
     currentTrack = index;
     audio.src = tracks[currentTrack].src;
     trackInfo.textContent = "/// " + tracks[currentTrack].name;
-    audio.play();
-    playBtn.innerHTML = "❚❚ PAUSE";
-    playBtn.style.color = "#fff";
+    audio.play().then(() => {
+      playBtn.innerHTML = "❚❚ PAUSE";
+      playBtn.style.color = "#fff";
+    }).catch(err => console.log("No se pudo reproducir la música:", err));
   }
 
   function toggleMusic(btn) {
@@ -70,6 +64,18 @@ document.addEventListener("DOMContentLoaded", () => {
 
   audio.volume = 0.4;
   audio.addEventListener("ended", nextTrack);
+
+  // ➡ Acción del botón "continue" con música automática
+  continueBtn.addEventListener("click", (e) => {
+    e.preventDefault();
+    errorSection.classList.add("fade-out"); // activa animación CSS
+    setTimeout(() => {
+      errorSection.style.display = "none";
+      mainContent.style.display = "block";
+      // 🎵 iniciar música automáticamente en el primer track
+      loadTrack(0);
+    }, 1000); // coincide con la duración de tu transición CSS
+  });
 
   // Exponer funciones a botones
   window.toggleMusic = toggleMusic;
