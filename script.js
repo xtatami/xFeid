@@ -64,20 +64,21 @@ document.addEventListener("DOMContentLoaded", () => {
   audio.volume = 0.4;
   audio.addEventListener("ended", nextTrack);
 
-  // ➡ Acción del botón "continue" con transición y música
-  continueBtn.addEventListener("click", (e) => {
-    e.preventDefault();
-    errorSection.classList.add("fade-out"); // activa animación CSS
-    setTimeout(() => {
-      errorSection.style.display = "none";
-      mainContent.style.display = "block";
-      // 🎵 iniciar música automáticamente
-      loadTrack(0);
-    }, 1000); // coincide con la duración de tu transición CSS
-  });
+ // ➡ Acción del botón "continue" con transición y música
+continueBtn.addEventListener("click", (e) => {
+  e.preventDefault();
+  errorSection.classList.add("fade-out"); // activa animación CSS
 
-  // Exponer funciones a botones
-  window.toggleMusic = toggleMusic;
-  window.nextTrack = nextTrack;
-  window.prevTrack = prevTrack;
+  setTimeout(() => {
+    errorSection.style.display = "none";
+    mainContent.style.display = "block";
+
+    // 🎵 iniciar música como si hubieras pulsado play
+    audio.src = tracks[0].src;            // carga primer track
+    trackInfo.textContent = "/// " + tracks[0].name;
+    audio.play().then(() => {
+      playBtn.innerHTML = "❚❚ PAUSE";
+      playBtn.style.color = "#fff";
+    }).catch(err => console.log("No se pudo reproducir la música:", err));
+  }, 1000); // coincide con la duración de tu transición CSS
 });
