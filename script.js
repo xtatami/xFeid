@@ -19,15 +19,43 @@ document.addEventListener("DOMContentLoaded", () => {
     errorSection.style.display = "flex";
   });
 
+  // ➡ Acción del botón "continue" - Reproducir audio + cambiar capa
+  continueBtn.addEventListener("click", (e) => {
+    e.preventDefault();
+    
+    // ✅ Reproducir audio al hacer clic en continue
+    if (audio.paused) {
+      audio.play();
+      playBtn.innerHTML = "❚❚ PAUSE";
+      playBtn.style.color = "#fff";
+    }
+    
+    // Cambiar de capa
+    errorSection.style.display = "none";
+    mainContent.style.display = "block";
+  });
+
   // --- 🎵 Reproductor de música ---
+  const tracks = [
+    { src: "assets/0.mp3", name: "Bajo De La Piel" },
+    { src: "assets/1.mp3", name: "AIZO1" },
+    { src: "assets/2.mp3", name: "PARAGON" },
+    { src: "assets/3.mp3", name: "Cuando El Agua Hirviendo" }
+  ];
+
+  let currentTrack = 0;
   const audio = document.getElementById("audioPlayer");
   const trackInfo = document.getElementById("trackInfo");
   const playBtn = document.querySelector(".play-btn");
 
-  // Configura el primer track directamente
-  audio.src = "assets/0.mp3";
-  trackInfo.textContent = "/// Bajo De La Piel";
-  audio.volume = 0.4;
+  function loadTrack(index) {
+    currentTrack = index;
+    audio.src = tracks[currentTrack].src;
+    trackInfo.textContent = "/// " + tracks[currentTrack].name;
+    audio.play();
+    playBtn.innerHTML = "❚❚ PAUSE";
+    playBtn.style.color = "#fff";
+  }
 
   function toggleMusic(btn) {
     if (audio.paused) {
@@ -41,18 +69,19 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  // ➡ Acción del botón "continue": mostrar main-content y arrancar música
-  continueBtn.addEventListener("click", (e) => {
-    e.preventDefault();
-    errorSection.style.display = "none";
-    mainContent.style.display = "block";
-    // 🎵 reproducir automáticamente el primer track
-    audio.play().then(() => {
-      playBtn.innerHTML = "❚❚ PAUSE";
-      playBtn.style.color = "#fff";
-    }).catch(err => console.log("No se pudo reproducir la música:", err));
-  });
+  function nextTrack() {
+    loadTrack((currentTrack + 1) % tracks.length);
+  }
 
-  // Exponer función al botón
+  function prevTrack() {
+    loadTrack((currentTrack - 1 + tracks.length) % tracks.length);
+  }
+
+  audio.volume = 0.4;
+  audio.addEventListener("ended", nextTrack);
+
+  // Exponer funciones a botones
   window.toggleMusic = toggleMusic;
+  window.nextTrack = nextTrack;
+  window.prevTrack = prevTrack;
 });
