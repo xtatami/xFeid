@@ -20,27 +20,14 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   // --- 🎵 Reproductor de música ---
-  const tracks = [
-    { src: "assets/0.mp3", name: "Bajo De La Piel" },
-    { src: "assets/1.mp3", name: "AIZO1" },
-    { src: "assets/2.mp3", name: "PARAGON" },
-    { src: "assets/3.mp3", name: "Cuando El Agua Hirviendo" }
-  ];
-
-  let currentTrack = 0;
   const audio = document.getElementById("audioPlayer");
   const trackInfo = document.getElementById("trackInfo");
   const playBtn = document.querySelector(".play-btn");
 
-  function loadTrack(index) {
-    currentTrack = index;
-    audio.src = tracks[currentTrack].src;
-    trackInfo.textContent = "/// " + tracks[currentTrack].name;
-    audio.play().then(() => {
-      playBtn.innerHTML = "❚❚ PAUSE";
-      playBtn.style.color = "#fff";
-    }).catch(err => console.log("No se pudo reproducir la música:", err));
-  }
+  // Configura el primer track directamente
+  audio.src = "assets/0.mp3";
+  trackInfo.textContent = "/// Bajo De La Piel";
+  audio.volume = 0.4;
 
   function toggleMusic(btn) {
     if (audio.paused) {
@@ -54,28 +41,18 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  function nextTrack() {
-    loadTrack((currentTrack + 1) % tracks.length);
-  }
-
-  function prevTrack() {
-    loadTrack((currentTrack - 1 + tracks.length) % tracks.length);
-  }
-
-  audio.volume = 0.4;
-  audio.addEventListener("ended", nextTrack);
-
   // ➡ Acción del botón "continue": mostrar main-content y arrancar música
   continueBtn.addEventListener("click", (e) => {
     e.preventDefault();
     errorSection.style.display = "none";
     mainContent.style.display = "block";
-    // reproducir automáticamente el primer track
-    loadTrack(0);
+    // 🎵 reproducir automáticamente el primer track
+    audio.play().then(() => {
+      playBtn.innerHTML = "❚❚ PAUSE";
+      playBtn.style.color = "#fff";
+    }).catch(err => console.log("No se pudo reproducir la música:", err));
   });
 
-  // Exponer funciones a botones
+  // Exponer función al botón
   window.toggleMusic = toggleMusic;
-  window.nextTrack = nextTrack;
-  window.prevTrack = prevTrack;
 });
