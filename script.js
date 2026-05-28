@@ -65,16 +65,13 @@ document.addEventListener("DOMContentLoaded", () => {
   audio.volume = 0.4;
   audio.addEventListener("ended", nextTrack);
 
-  // ➡ Acción del botón "continue" con música automática
+  // ➡ Acción del botón "continue": mostrar main-content y arrancar música
   continueBtn.addEventListener("click", (e) => {
     e.preventDefault();
-    errorSection.classList.add("fade-out"); // activa animación CSS
-    setTimeout(() => {
-      errorSection.style.display = "none";
-      mainContent.style.display = "block";
-      // 🎵 reproducir automáticamente el primer track (assets/0.mp3)
-      loadTrack(0);
-    }, 1000); // coincide con la duración de tu transición CSS
+    errorSection.style.display = "none";
+    mainContent.style.display = "block";
+    // reproducir automáticamente el primer track
+    loadTrack(0);
   });
 
   // Exponer funciones a botones
